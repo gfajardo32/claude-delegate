@@ -8,6 +8,12 @@ rm -rf "$DEST"
 cp -R "$SRC" "$DEST"
 chmod +x "$DEST"/scripts/*.sh
 echo "Installed to $DEST"
+CONF="$HOME/.claude/delegate.conf"
+if [[ -f "$CONF" ]]; then
+  echo "Kept your settings in $CONF"
+else
+  echo "Pick your agents: bash $DEST/scripts/menu.sh   (defaults work without it)"
+fi
 for tool in agy codex; do
   command -v "$tool" >/dev/null || echo "Note: $tool is not installed yet (see README)."
 done

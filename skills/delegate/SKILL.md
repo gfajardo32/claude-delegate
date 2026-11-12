@@ -1,6 +1,6 @@
 ---
 name: delegate
-description: Plan in Claude, delegate the typing. Sends routine coding to Gemini (Antigravity CLI), hard bugs, refactors and reviews to OpenAI Codex CLI, and image generation to Codex, all on your existing subscriptions with no API keys. Use for any coding task bigger than a few lines, code reviews, or when the user asks for an image, logo or icon.
+description: Plan in Claude, delegate the typing. Sends routine coding, hard bugs, reviews and images to the agent the user picked for each (Gemini via Antigravity CLI, OpenAI Codex CLI, or a Claude subagent), all on your existing subscriptions with no API keys. Use for any coding task bigger than a few lines, code reviews, or when the user asks for an image, logo or icon.
 ---
 
 # Delegate: Claude plans, Gemini and Codex write
@@ -23,27 +23,55 @@ Run them with `bash <path to script>` from the project root.
 - You own the final answer. If a delegate's change is wrong, send it back with the exact
   problem, or fix the small part yourself.
 
-## 2. Routine coding: Gemini (Antigravity CLI, `agy`)
-Feature code, boilerplate, file edits, renames, large codebase reads and summaries.
+## 2. Who does what: the user's menu
+The user picks an agent and model for each role with `scripts/menu.sh` (saved in
+`~/.claude/delegate.conf`). Check it once per session:
 
-    scripts/gemini-task.sh "<instructions>"            # may edit files
-    scripts/gemini-task.sh --read-only "<question>"     # reads and answers only
+    bash scripts/delegate.sh --show
 
-The script runs `agy` in accept-edits mode with a sandbox and a 10 minute timeout,
-appends "Do NOT run any shell commands. Only create and edit files." (in this mode a run
-that tries a shell command can end with nothing written), and retries once on a fallback
-model. You run tests, builds and servers yourself.
+Then send every task through the router, never straight to a vendor script:
 
-## 3. Hard problems: Codex CLI
-Complex algorithms, gnarly bugs, tricky refactors, second opinions.
+    scripts/delegate.sh light  "<instructions>"   # feature code, boilerplate, edits, renames
+    scripts/delegate.sh read   "<question>"       # big codebase reads and summaries, no edits
+    scripts/delegate.sh heavy  "<instructions>"   # hard bugs, algorithms, tricky refactors
+    scripts/delegate.sh review "<what to review>" # read-only second opinion
+    scripts/delegate.sh image  "<what, size, style>" <output path>
+    scripts/delegate.sh browser                   # prints BROWSER=<choice>
 
-    scripts/codex-task.sh "<instructions>"     # edits inside the project folder only
-    scripts/codex-review.sh "<what to review>"  # read-only review
+Exit codes:
+- **10**: that role is set to Claude. It prints `CLAUDE_SUBAGENT role=<r> model=<m>`.
+  Run the same prompt as a subagent (Task tool) with that model. That is still Claude
+  Code on the user's own plan, so it is allowed.
+- **5**: that role is turned off. Tell the user and ask how they want it handled.
+- **3** (image): Codex is out of usage, see section 4.
 
-## 4. Images: Codex image generation
+**Orchestrator.** Only Claude orchestrates: planning, splitting and verifying stay in
+Claude Code, because routing another vendor's model into Claude's seat (or Claude into
+a third-party tool) is what breaks the terms. If `Orchestrator` in `--show` is not
+`default` and differs from the model you are running as, tell the user once to run
+`/model <name>`. You cannot switch your own model.
+
+**Browser.** `claude-chrome`: use Claude in Chrome (`claude --chrome` / the `/chrome`
+command) to load and check pages. `playwright`: use the Playwright MCP server if it is
+connected, otherwise tell the user it is not set up. `none`: do not open a browser.
+
+**Changing settings.** When the user asks to change a choice ("use Claude Haiku for light
+coding"), run `scripts/menu.sh set KEY=VALUE ...` (keys are in `--show`; set the AGENT
+key before its MODEL key). The interactive menu needs a real terminal, so do not run
+`menu.sh` with no arguments yourself.
+
+## 3. What the vendor scripts do (the router calls these)
+- Gemini, `scripts/gemini-task.sh [--read-only]`: runs `agy` in accept-edits mode (plan
+  mode for read-only) with a sandbox and a 10 minute timeout, appends "Do NOT run any
+  shell commands. Only create and edit files." (in this mode a run that tries a shell
+  command can end with nothing written), and retries once on the fallback model. You run
+  tests, builds and servers yourself.
+- Codex, `scripts/codex-task.sh [--read-only]` and `scripts/codex-review.sh`: `codex exec`
+  in a workspace-write or read-only sandbox, with `OPENAI_API_KEY` removed so it bills the
+  ChatGPT plan, never the API.
+
+## 4. Images
 Logos, icons, app art, mockups, posters, slide graphics, photos.
-
-    scripts/codex-image.sh "<what to make, size, style>" <output path, e.g. public/img/hero.png>
 
 - Put the size in the description (1024x1024, 512x512 for icons, 1536x1024 for heroes).
 - Open the image to check it before using it.
@@ -65,7 +93,7 @@ Every prompt includes:
 
 ## 7. When a delegate fails
 - CLI error or timeout: retry once with a clearer, smaller prompt.
-- Gemini fails twice: send the task to Codex. Codex fails: do it yourself (code only;
-  images follow section 4).
+- The chosen agent fails twice: try the other external agent (Gemini or Codex). That
+  fails too: do it yourself (code only; images follow section 4).
 - Codex "usage limit": do not retry before the reset time it gives.
 - Tell the user whenever a task fell back to you, so they know where tokens went.

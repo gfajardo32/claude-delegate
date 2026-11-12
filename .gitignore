@@ -1,0 +1,9 @@
+# Never commit local settings, logins or secrets
+delegate.conf
+.env
+.env.*
+auth.json
+.codex/
+.antigravity/
+*.bak
+.DS_Store

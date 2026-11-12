@@ -2,9 +2,13 @@
 # Routine coding through Gemini in the Antigravity CLI (agy), on your Google login.
 # Usage: gemini-task.sh [--read-only] "<instructions>"
 set -uo pipefail
-
-MODEL="${DELEGATE_GEMINI_MODEL:-gemini-4-hydrogen-medium}"
-FALLBACK="${DELEGATE_GEMINI_FALLBACK:-gemini-3.8-flash-medium}"
+# Model order: env var, then ~/.claude/delegate.conf (menu.sh), then built-in default.
+source "$(cd "$(dirname "$0")" && pwd)/lib.sh"
+conf_load
+MODEL="${DELEGATE_GEMINI_MODEL:-$LIGHT_MODEL}"
+FALLBACK="${DELEGATE_GEMINI_FALLBACK:-$GEMINI_FALLBACK}"
+# A non-Gemini model in the config (light coding set to another agent) means use the default.
+[[ "$MODEL" == gemini-* ]] || MODEL="gemini-4-hydrogen-medium"
 TIMEOUT="${DELEGATE_TIMEOUT:-600s}"
 MODE="accept-edits"
 
