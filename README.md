@@ -109,6 +109,14 @@ Env vars win over the menu settings for a single run.
 
 Run `agy models` to see the models your account has.
 
+## Troubleshooting
+| What you see | Why | Fix |
+|---|---|---|
+| `[delegate] agy can't write files in <folder>` (exit 7) | agy only edits inside folders listed in `trustedWorkspaces`, and headless runs can't ask you | Add the folder or a parent to `trustedWorkspaces` in `~/.gemini/antigravity-cli/settings.json` |
+| `codex not found` / `agy not found` | Tool not installed for a role you picked | `setup.sh --check` prints the install command, or switch the role in `menu.sh` |
+| Image step exits 3 | Codex is out of usage | Wait for the reset time it prints, then rerun |
+| Changes to `menu.sh` settings seem ignored | An env var like `DELEGATE_GEMINI_MODEL` is set | Env vars win over the menu; unset it |
+
 ## Lessons baked in
 - `agy -p` takes the next word as the prompt, so `-p` always goes last.
 - In accept-edits mode, an `agy` run that tries a shell command can end with nothing
