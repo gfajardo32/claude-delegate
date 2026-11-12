@@ -1,7 +1,7 @@
 {
   "name": "delegate",
   "displayName": "Delegate",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Claude plans and verifies; Gemini (Antigravity CLI), OpenAI Codex CLI or Claude subagents do the typing. Pick the agent for each role. Runs on your existing subscriptions, no API keys.",
   "author": {
     "name": "Guido M. Fajardo Gabrie",
@@ -19,5 +19,6 @@
     "orchestration",
     "subagents",
     "image-generation"
-  ]
+  ],
+  "icon": "./.claude-plugin/icon.png"
 }

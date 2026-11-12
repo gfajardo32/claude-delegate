@@ -107,6 +107,8 @@ Env vars win over the menu settings for a single run.
 | `DELEGATE_GEMINI_FALLBACK` | `gemini-3.8-flash-medium` |
 | `DELEGATE_CODEX_MODEL` | Codex's own default |
 | `DELEGATE_CODEX_LEAN` | `on` |
+| `DELEGATE_IMAGE_SETTLE` | `45` (seconds the image must sit unchanged before a hung Codex is stopped) |
+| `DELEGATE_IMAGE_TIMEOUT` | `900` (seconds) |
 | `DELEGATE_TIMEOUT` | `600s` |
 
 Run `agy models` to see the models your account has.
@@ -126,6 +128,8 @@ Run `agy models` to see the models your account has.
 - `codex exec` only edits files with `-s workspace-write`.
 - Your own Codex plugins and hooks load into every `codex exec` run. With a few installed, a
   4-line change cost about 33k tokens; `--ignore-user-config` (lean mode) brought it to 11k.
+- Codex can keep running after the image is saved (user plugins and hooks keep it alive),
+  so the image script stops it once the file has stopped changing.
 - `agy` only writes inside the folders in its `trustedWorkspaces`, and headless runs can't
   ask, so the script checks first.
 - With `OPENAI_API_KEY` set, Codex bills the API instead of your plan. The scripts unset it.

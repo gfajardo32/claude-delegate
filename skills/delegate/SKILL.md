@@ -99,6 +99,9 @@ Logos, icons, app art, mockups, posters, slide graphics, photos.
 
 - Put the size in the description (1024x1024, 512x512 for icons, 1536x1024 for heroes).
 - Open the image to check it before using it.
+- The script stops Codex on its own if it keeps running after the image is saved (some
+  user plugins keep it alive), and it uses lean mode like the other Codex scripts.
+  Exit 124 means it ran 15 minutes with no image: retry once with a simpler description.
 - Exit code 3 means Codex is out of usage. Do NOT draw a replacement and do not install
   packages to fake one. Leave the image path in the code, tell the user the reset time
   the script printed, and rerun the same command after it.
