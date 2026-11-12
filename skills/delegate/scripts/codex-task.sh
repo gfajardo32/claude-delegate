@@ -12,6 +12,10 @@ if [[ "${1:-}" == "--read-only" ]]; then SANDBOX="read-only"; TAIL="Do not edit 
 command -v codex >/dev/null || { echo "codex not found. Install the Codex CLI and sign in with ChatGPT." >&2; exit 127; }
 MODEL_ARGS=()
 [[ -n "${DELEGATE_CODEX_MODEL:-}" && "${DELEGATE_CODEX_MODEL}" != default ]] && MODEL_ARGS=(-m "$DELEGATE_CODEX_MODEL")
+# Lean mode: skip ~/.codex/config.toml (your plugins, hooks, MCP servers) for this run.
+# Login still comes from CODEX_HOME. Cuts tokens a lot. Turn off with: menu.sh set CODEX_LEAN=off
+source "$(cd "$(dirname "$0")" && pwd)/lib.sh"; conf_load
+[[ "${DELEGATE_CODEX_LEAN:-$CODEX_LEAN}" == on ]] && MODEL_ARGS+=(--ignore-user-config)
 LOG="$(mktemp)"; trap 'rm -f "$LOG"' EXIT
 # Never bill an API key: without OPENAI_API_KEY, Codex uses the ChatGPT plan.
 env -u OPENAI_API_KEY codex exec ${MODEL_ARGS[@]+"${MODEL_ARGS[@]}"} -s "$SANDBOX" "$1

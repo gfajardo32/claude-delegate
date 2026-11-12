@@ -82,7 +82,7 @@ interactive() {
   echo "Claude always orchestrates (that keeps every tool on its own vendor's login)."
   while true; do
     echo; conf_show; echo
-    pick "Change what?" "Orchestrator model" "Light coding" "Heavy logic" "Review" "Images" "Browser" "Gemini fallback" "Reset to defaults" "Save and quit" "Quit without saving"
+    pick "Change what?" "Orchestrator model" "Light coding" "Heavy logic" "Review" "Images" "Browser" "Gemini fallback" "Codex lean mode" "Reset to defaults" "Save and quit" "Quit without saving"
     case "$PICKED" in
       "Orchestrator model")
         pick "Claude model that plans and verifies:" default opus sonnet haiku
@@ -95,6 +95,7 @@ interactive() {
       "Images")       pick "Image agent:" codex none; IMAGE_AGENT="$PICKED" ;;
       "Browser")      pick "Browser for testing web pages:" claude-chrome playwright none; BROWSER_AGENT="$PICKED" ;;
       "Gemini fallback") pick_model_for gemini; GEMINI_FALLBACK="$PICKED" ;;
+      "Codex lean mode") pick "Skip your Codex plugins/hooks/MCP for delegated runs:" on off; CODEX_LEAN="$PICKED" ;;
       "Reset to defaults") conf_defaults ;;
       "Save and quit") conf_save; echo "Saved to $DELEGATE_CONF"; exit 0 ;;
       "Quit without saving") exit 0 ;;

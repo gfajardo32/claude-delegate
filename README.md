@@ -76,6 +76,7 @@ bash ~/.claude/skills/delegate/scripts/setup.sh     # re-run the tool questions 
 | Review | `gemini`, `codex`, `claude` (+ model) |
 | Images | `codex`, `none` |
 | Browser | `claude-chrome`, `playwright`, `none` |
+| Codex lean mode | `on` (default) skips your own Codex plugins, hooks and MCP servers in delegated runs, `off` keeps them |
 
 Choices are saved in `~/.claude/delegate.conf`, outside the repo, so reinstalling keeps them.
 You can also just tell Claude ("use Haiku for light coding") and it updates the file.
@@ -105,6 +106,7 @@ Env vars win over the menu settings for a single run.
 | `DELEGATE_GEMINI_MODEL` | `gemini-4-hydrogen-medium` |
 | `DELEGATE_GEMINI_FALLBACK` | `gemini-3.8-flash-medium` |
 | `DELEGATE_CODEX_MODEL` | Codex's own default |
+| `DELEGATE_CODEX_LEAN` | `on` |
 | `DELEGATE_TIMEOUT` | `600s` |
 
 Run `agy models` to see the models your account has.
@@ -122,6 +124,10 @@ Run `agy models` to see the models your account has.
 - In accept-edits mode, an `agy` run that tries a shell command can end with nothing
   written. Every prompt tells Gemini not to run shell commands; Claude runs tests itself.
 - `codex exec` only edits files with `-s workspace-write`.
+- Your own Codex plugins and hooks load into every `codex exec` run. With a few installed, a
+  4-line change cost about 33k tokens; `--ignore-user-config` (lean mode) brought it to 11k.
+- `agy` only writes inside the folders in its `trustedWorkspaces`, and headless runs can't
+  ask, so the script checks first.
 - With `OPENAI_API_KEY` set, Codex bills the API instead of your plan. The scripts unset it.
 - When Codex is out of usage, the skill stops and reports the reset time instead of having
   Claude fake an image.

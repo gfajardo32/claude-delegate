@@ -4,7 +4,7 @@
 
 DELEGATE_CONF="${DELEGATE_CONF:-$HOME/.claude/delegate.conf}"
 
-CONF_KEYS="ORCHESTRATOR_MODEL LIGHT_AGENT LIGHT_MODEL HEAVY_AGENT HEAVY_MODEL REVIEW_AGENT REVIEW_MODEL IMAGE_AGENT BROWSER_AGENT GEMINI_FALLBACK"
+CONF_KEYS="ORCHESTRATOR_MODEL LIGHT_AGENT LIGHT_MODEL HEAVY_AGENT HEAVY_MODEL REVIEW_AGENT REVIEW_MODEL IMAGE_AGENT BROWSER_AGENT GEMINI_FALLBACK CODEX_LEAN"
 
 conf_defaults() {
   ORCHESTRATOR_MODEL=default
@@ -14,6 +14,7 @@ conf_defaults() {
   IMAGE_AGENT=codex
   BROWSER_AGENT=claude-chrome
   GEMINI_FALLBACK=gemini-3.8-flash-medium
+  CODEX_LEAN=on
 }
 
 # Allowed choices per setting. Models are free text (validated by charset only).
@@ -23,6 +24,7 @@ conf_choices() {
     LIGHT_AGENT|HEAVY_AGENT|REVIEW_AGENT) echo "gemini codex claude" ;;
     IMAGE_AGENT)   echo "codex none" ;;
     BROWSER_AGENT) echo "claude-chrome playwright none" ;;
+    CODEX_LEAN)    echo "on off" ;;
     *) echo "" ;;
   esac
 }
@@ -61,6 +63,7 @@ conf_show() {
   echo "Images                 : $IMAGE_AGENT"
   echo "Browser                : $BROWSER_AGENT"
   echo "Gemini fallback        : $GEMINI_FALLBACK"
+  echo "Codex lean mode        : $CODEX_LEAN (skip your Codex plugins, hooks and MCP for delegated runs)"
 }
 
 model_label() { [[ "$2" == default ]] && echo "$1 default model" || echo "$2"; }

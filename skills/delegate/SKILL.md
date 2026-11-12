@@ -90,7 +90,9 @@ key before its MODEL key). The interactive menu needs a real terminal, so do not
   tests, builds and servers yourself.
 - Codex, `scripts/codex-task.sh [--read-only]` and `scripts/codex-review.sh`: `codex exec`
   in a workspace-write or read-only sandbox, with `OPENAI_API_KEY` removed so it bills the
-  ChatGPT plan, never the API.
+  ChatGPT plan, never the API. Lean mode (default) adds `--ignore-user-config` so the
+  user's own Codex plugins, hooks and MCP servers don't load into delegated runs; that cut a
+  small task from about 33k to 11k tokens. Login is unaffected.
 
 ## 4. Images
 Logos, icons, app art, mockups, posters, slide graphics, photos.
