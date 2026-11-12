@@ -33,6 +33,21 @@ code and Claude did about 30% of the work: planning, serving and verifying.
 - macOS or Linux (bash)
 
 ## Install
+**As a plugin (recommended).** Inside Claude Code:
+```
+/plugin marketplace add gfajardo32/claude-delegate
+/plugin install delegate@gfajardo32
+```
+On Claude Code 2.1.275 or later this also works in one step:
+`/plugin install delegate --marketplace gfajardo32/claude-delegate`.
+Then run setup once in your terminal to pick your tools (Claude tells you the exact path
+the first time it uses the skill if you skip this):
+```bash
+bash ~/.claude/plugins/cache/*/delegate/*/skills/delegate/scripts/setup.sh
+```
+Update later with `/plugin marketplace update gfajardo32`.
+
+**Manual install.**
 ```bash
 git clone https://github.com/gfajardo32/claude-delegate.git
 cd claude-delegate && ./install.sh

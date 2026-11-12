@@ -48,7 +48,7 @@ conf_save() {
   mkdir -p "$(dirname "$DELEGATE_CONF")"
   local tmp="$DELEGATE_CONF.tmp.$$" k
   {
-    echo "# claude-delegate settings. Edit with: bash ~/.claude/skills/delegate/scripts/menu.sh"
+    echo "# claude-delegate settings. Edit with: bash $(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/menu.sh"
     for k in $CONF_KEYS; do echo "$k=${!k}"; done
   } > "$tmp" && mv "$tmp" "$DELEGATE_CONF"
 }

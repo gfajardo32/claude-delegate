@@ -9,8 +9,10 @@ Goal: spend Claude tokens on thinking, not typing. You (Claude) plan, split the 
 hand the writing to Gemini or Codex through their official CLIs, and verify the result.
 Every tool runs on its own vendor's subscription login. Never use or set API keys.
 
-Scripts live next to this file in `scripts/` (normally `~/.claude/skills/delegate/scripts/`).
-Run them with `bash <path to script>` from the project root.
+Scripts live next to this file in `scripts/`. Installed as a plugin, that is
+`${CLAUDE_PLUGIN_ROOT}/skills/delegate/scripts/`; installed with `install.sh`, it is
+`~/.claude/skills/delegate/scripts/`. Use whichever exists. Run them with
+`bash <path to script>` from the project root. Below, `scripts/` means that folder.
 
 ## 1. Your role: architect and manager
 - Read only what the plan needs: `rg`/`grep` and line ranges, not whole files.

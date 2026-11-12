@@ -1,0 +1,14 @@
+{
+  "name": "gfajardo32",
+  "description": "Claude Code plugins by Guido M. Fajardo Gabrie",
+  "owner": {
+    "name": "Guido M. Fajardo Gabrie"
+  },
+  "plugins": [
+    {
+      "name": "delegate",
+      "source": "./",
+      "description": "Claude plans and verifies; Gemini, Codex or Claude subagents do the typing. Pick the agent for each role."
+    }
+  ]
+}
