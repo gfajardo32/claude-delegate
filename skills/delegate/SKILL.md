@@ -58,7 +58,9 @@ Exit codes:
   Run the same prompt as a subagent (Task tool) with that model. That is still Claude
   Code on the user's own plan, so it is allowed.
 - **5**: that role is turned off. Tell the user and ask how they want it handled.
-- **3** (image): Codex is out of usage, see section 4.
+- **3** (any Codex role): Codex is out of usage; the script printed the reset time. Do not
+  retry Codex before then. For code, send the task to the other agent or a Claude subagent
+  and tell the user. For images, follow section 4.
 - **7** (Gemini): agy can't write in this folder because it is outside agy's
   `trustedWorkspaces`. Do not retry and do not edit the user's agy settings yourself.
   Show the user the folder path the script printed and ask them to add it (or a parent)
