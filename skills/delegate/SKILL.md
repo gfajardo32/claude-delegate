@@ -31,6 +31,19 @@ The user picks an agent and model for each role with `scripts/menu.sh` (saved in
 
     bash scripts/delegate.sh --show
 
+Then check the tools those settings need:
+
+    bash scripts/setup.sh --check
+
+Any `MISSING <tool>` line: tell the user which tool is missing, what it is for, and the
+install command printed under it, and ask if you should run it. Run it only after they
+say yes. Sign-in (`agy` first run, `codex login`) opens a browser, so the user does that
+in their own terminal. Until a tool is installed and signed in, give its roles to a
+Claude subagent and say so. A `MANUAL chrome` line is not an error: mention it only if
+you need the browser and it is not connected. If the user has no
+`~/.claude/delegate.conf` yet, suggest they run `bash scripts/setup.sh` in their own
+terminal to pick tools first (it is interactive, so do not run it yourself).
+
 Then send every task through the router, never straight to a vendor script:
 
     scripts/delegate.sh light  "<instructions>"   # feature code, boilerplate, edits, renames

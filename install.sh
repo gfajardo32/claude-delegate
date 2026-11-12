@@ -11,9 +11,9 @@ echo "Installed to $DEST"
 CONF="$HOME/.claude/delegate.conf"
 if [[ -f "$CONF" ]]; then
   echo "Kept your settings in $CONF"
+  bash "$DEST/scripts/setup.sh" --check || echo "Run setup to install what's missing: bash $DEST/scripts/setup.sh"
+elif [[ -t 0 ]]; then
+  bash "$DEST/scripts/setup.sh"
 else
-  echo "Pick your agents: bash $DEST/scripts/menu.sh   (defaults work without it)"
+  echo "Next: bash $DEST/scripts/setup.sh   (picks your tools and installs only those)"
 fi
-for tool in agy codex; do
-  command -v "$tool" >/dev/null || echo "Note: $tool is not installed yet (see README)."
-done

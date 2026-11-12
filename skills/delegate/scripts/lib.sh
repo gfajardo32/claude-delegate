@@ -83,3 +83,40 @@ agent_default_model() {
     *)      echo "default" ;;
   esac
 }
+
+# ---- Tool requirements (used by setup.sh) ----
+# Prints one tool id per line for what the current config needs: agy codex playwright chrome
+needed_tools() {
+  local roles="$LIGHT_AGENT $HEAVY_AGENT $REVIEW_AGENT"
+  case " $roles " in *" gemini "*) echo agy ;; esac
+  case " $roles $IMAGE_AGENT " in *" codex "*) echo codex ;; esac
+  [[ "$BROWSER_AGENT" == playwright ]] && echo playwright
+  [[ "$BROWSER_AGENT" == claude-chrome ]] && echo chrome
+  return 0
+}
+
+tool_installed() {
+  case "$1" in
+    agy)   command -v agy >/dev/null ;;
+    codex) command -v codex >/dev/null ;;
+    playwright) command -v claude >/dev/null && claude mcp list 2>/dev/null | grep -qi playwright ;;
+    chrome) return 0 ;;  # browser extension, can't be checked from a shell
+  esac
+}
+
+tool_install_cmd() {
+  case "$1" in
+    agy)   echo "curl -fsSL https://antigravity.google/cli/install.sh | bash" ;;
+    codex) echo "npm install -g @openai/codex" ;;
+    playwright) echo "claude mcp add playwright -- npx @playwright/mcp@latest" ;;
+  esac
+}
+
+tool_about() {
+  case "$1" in
+    agy)   echo "Antigravity CLI (Gemini). Free with a Google account. Sign in on first run: agy" ;;
+    codex) echo "OpenAI Codex CLI. Needs ChatGPT (Plus or higher for images). Sign in after install: codex login" ;;
+    playwright) echo "Playwright MCP server, lets Claude drive a headless browser. Needs Node (npx)." ;;
+    chrome) echo "Claude in Chrome extension. Install it from the Chrome Web Store, then start Claude Code with: claude --chrome" ;;
+  esac
+}

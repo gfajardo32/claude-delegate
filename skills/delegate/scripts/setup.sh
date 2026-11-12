@@ -6,6 +6,7 @@ set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 # shellcheck source=lib.sh
 source "$HERE/lib.sh"
+declare -F needed_tools >/dev/null || { echo "[delegate] lib.sh is out of date (no needed_tools). Reinstall the skill." >&2; exit 1; }
 conf_load
 
 check() {
